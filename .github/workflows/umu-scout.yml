@@ -1,0 +1,72 @@
+name: umu-scout
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * 0'
+  push:
+    branches:
+      - main
+    paths:
+      - umu-scout/*
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.package.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-python@v5
+        with:
+          cache: pip
+          python-version: '3.12'
+          check-latest: true
+          architecture: x64
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+      - name: Package umu-scout compatibility tool
+        id: package
+        shell: bash
+        env:
+          UMU_SCOUT_REPO: ${{ github.repository }}
+        run: |
+          tag=$(python3 -m umu-scout update)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Create release
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh
+          release create
+          "${{ steps.package.outputs.tag }}"
+          --latest
+          --title "Version ${{ steps.package.outputs.tag }}"
+          --notes-file dist/umu-scout.version.json
+      - name: Upload umu-scout.tar.xz to release
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh
+          release upload
+          "${{ steps.package.outputs.tag }}"
+          dist/umu-scout.tar.xz
+          --clobber
+      - name: Upload umu-scout.version.json to release
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh
+          release upload
+          "${{ steps.package.outputs.tag }}"
+          dist/umu-scout.version.json
+          --clobber
+
