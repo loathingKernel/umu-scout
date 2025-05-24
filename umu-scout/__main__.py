@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 import tarfile
+from datetime import date
 from io import BytesIO
 from pathlib import Path
 from urllib.request import urlopen, urlretrieve
@@ -62,8 +63,8 @@ if __name__ == "__main__":
     versions = {
         "app1070560": urlopen(app1070560_ver_url).read().strip().decode("utf-8"),
         "steam-runtime": urlopen(steam_runtime_ver_url).read().strip().decode("utf-8"),
+        "tag": str(date.today()).replace("-", "")
     }
-    versions["tag"] = '+'.join([versions[part] for part in package_parts])
 
     for part in package_parts:
         print(f"{part}: {old_ver.get(part) if old_ver else None} -> {versions[part]}", file=sys.stderr)
