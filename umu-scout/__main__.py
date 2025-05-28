@@ -88,13 +88,14 @@ if __name__ == "__main__":
     urlretrieve(steam_runtime_csum_url, dist.joinpath("SteamLinuxRuntime", "steam-runtime.tar.xz.checksum"))
 
     shutil.move(dist.joinpath("SteamLinuxRuntime"), dist.joinpath(package_name))
-    shutil.make_archive(
+    archive = shutil.make_archive(
         dist.joinpath(package_name).as_posix(),
         format="xztar",
-        root_dir=dist,
+        root_dir=dist.relative_to(os.getcwd()).as_posix(),
+        base_dir=dist.joinpath(package_name).relative_to(dist).as_posix()
     )
 
-    archive = dist.joinpath(package_name).with_suffix(".tar.xz")
+    archive = dist.joinpath(archive)
     with open(archive, "rb") as tar:
         sha512sum = hashlib.sha512(tar.read()).hexdigest()
 
