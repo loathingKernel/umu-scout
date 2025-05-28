@@ -66,6 +66,17 @@ jobs:
           "${{ steps.package.outputs.tag }}"
           dist/umu-scout.tar.xz
           --clobber
+      - name: Upload umu-scout.sha512sum to release
+        if: ${{ steps.package.outputs.tag != '' }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh
+          release upload
+          "${{ steps.package.outputs.tag }}"
+          dist/umu-scout.sha512sum
+          --clobber
       - name: Upload umu-scout.version.json to release
         if: ${{ steps.package.outputs.tag != '' }}
         shell: bash

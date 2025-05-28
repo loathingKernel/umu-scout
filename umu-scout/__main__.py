@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import shutil
@@ -95,6 +96,13 @@ if __name__ == "__main__":
         format="xztar",
         root_dir=dist,
     )
+
+    archive = dist.joinpath(package_name).with_suffix(".tar.xz")
+    with open(archive, "rb") as tar:
+        sha512sum = hashlib.sha512(tar.read()).hexdigest()
+
+    with open(dist.joinpath(package_name).with_suffix(".sha512sum"), "w") as fd:
+        fd.write(f"{sha512sum} {archive.name}")
 
     # to stdout to be captured as tag
     print(versions["tag"], file=sys.stdout)
