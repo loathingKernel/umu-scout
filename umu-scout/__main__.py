@@ -79,9 +79,6 @@ if __name__ == "__main__":
         shutil.rmtree(dist)
     dist.mkdir(exist_ok=True)
 
-    with open(dist.joinpath(package_version_file), "w") as versions_json:
-        versions_json.write(json.dumps(versions))
-
     with tarfile.open(name=None, fileobj=BytesIO(urlopen(app1070560_tar_url).read())) as tar:
         tar.extractall(dist, filter="fully_trusted")
 
@@ -103,6 +100,9 @@ if __name__ == "__main__":
 
     with open(dist.joinpath(package_name).with_suffix(".sha512sum"), "w") as fd:
         fd.write(f"{sha512sum} {archive.name}")
+
+    with open(dist.joinpath(package_version_file), "w") as versions_json:
+        versions_json.write(json.dumps(versions))
 
     # to stdout to be captured as tag
     print(versions["tag"], file=sys.stdout)
