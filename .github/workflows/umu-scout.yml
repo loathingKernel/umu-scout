@@ -64,7 +64,7 @@ jobs:
           gh
           release upload
           "${{ steps.package.outputs.tag }}"
-          dist/umu-scout.tar.xz
+          dist/umu-scout-${{ steps.package.outputs.tag }}.tar.xz
           --clobber
       - name: Upload umu-scout.sha512sum to release
         if: ${{ steps.package.outputs.tag != '' }}
@@ -75,7 +75,7 @@ jobs:
           gh
           release upload
           "${{ steps.package.outputs.tag }}"
-          dist/umu-scout.sha512sum
+          dist/umu-scout-${{ steps.package.outputs.tag }}.sha512sum
           --clobber
       - name: Upload umu-scout.version.json to release
         if: ${{ steps.package.outputs.tag != '' }}

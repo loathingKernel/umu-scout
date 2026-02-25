@@ -87,19 +87,20 @@ if __name__ == "__main__":
 
     urlretrieve(steam_runtime_csum_url, dist.joinpath("SteamLinuxRuntime", "steam-runtime.tar.xz.checksum"))
 
-    shutil.move(dist.joinpath("SteamLinuxRuntime"), dist.joinpath(package_name))
+    asset_name = f"{package_name}-{versions["tag"]}"
+    shutil.move(dist.joinpath("SteamLinuxRuntime"), dist.joinpath(asset_name))
     archive = shutil.make_archive(
-        dist.joinpath(package_name).as_posix(),
+        dist.joinpath(asset_name).as_posix(),
         format="xztar",
         root_dir=dist.relative_to(os.getcwd()).as_posix(),
-        base_dir=dist.joinpath(package_name).relative_to(dist).as_posix()
+        base_dir=dist.joinpath(asset_name).relative_to(dist).as_posix()
     )
 
     archive = dist.joinpath(archive)
     with open(archive, "rb") as tar:
         sha512sum = hashlib.sha512(tar.read()).hexdigest()
 
-    with open(dist.joinpath(package_name).with_suffix(".sha512sum"), "w") as fd:
+    with open(dist.joinpath(asset_name).with_suffix(".sha512sum"), "w") as fd:
         fd.write(f"{sha512sum} {archive.name}")
 
     with open(dist.joinpath(package_version_file), "w") as versions_json:
