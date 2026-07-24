@@ -11,12 +11,14 @@ from urllib.request import urlopen, urlretrieve
 
 dist = Path("dist").resolve()
 
-app1070560_tar_url = "https://repo.steampowered.com/pressure-vessel/snapshots/latest/app1070560/SteamLinuxRuntime.tar.xz"
-app1070560_ver_url = "https://repo.steampowered.com/pressure-vessel/snapshots/latest/VERSION.txt"
+app1070560_latest = urlopen("https://repo.steampowered.com/pressure-vessel/snapshots/latest.txt").read().strip().decode("utf-8")
+app1070560_tar_url = f"https://repo.steampowered.com/pressure-vessel/snapshots/{app1070560_latest}/app1070560/SteamLinuxRuntime.tar.xz"
+app1070560_ver_url = f"https://repo.steampowered.com/pressure-vessel/snapshots/{app1070560_latest}/VERSION.txt"
 
-steam_runtime_tar_url = "https://repo.steampowered.com/steamrt1/images/latest-public-beta/steam-runtime.tar.xz"
-steam_runtime_ver_url = "https://repo.steampowered.com/steamrt1/images/latest-public-beta/steam-runtime.version.txt"
-steam_runtime_csum_url = "https://repo.steampowered.com/steamrt1/images/latest-public-beta/steam-runtime.tar.xz.checksum"
+steam_runtime_latest = urlopen("https://repo.steampowered.com/steamrt1/images/latest-public-beta.txt").read().strip().decode("utf-8")
+steam_runtime_tar_url = f"https://repo.steampowered.com/steamrt1/images/{steam_runtime_latest}/steam-runtime.tar.xz"
+steam_runtime_ver_url = f"https://repo.steampowered.com/steamrt1/images/{steam_runtime_latest}/steam-runtime.version.txt"
+steam_runtime_csum_url = f"https://repo.steampowered.com/steamrt1/images/{steam_runtime_latest}/steam-runtime.tar.xz.checksum"
 
 package_parts =  ("app1070560", "steam-runtime")
 package_name = "umu-scout"
